@@ -13,6 +13,7 @@ func UserRoutes(router *gin.Engine) {
 		userGroup.POST("/", controllers.CreateUser)
 		userGroup.GET("/:id", controllers.GetUserByID)
 		userGroup.DELETE("/:id", controllers.DeleteUser)
+		userGroup.PUT("/:id", controllers.UpdateUser)
 
 	}
 }

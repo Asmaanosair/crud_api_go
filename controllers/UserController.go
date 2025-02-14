@@ -47,3 +47,26 @@ func DeleteUser(c *gin.Context) {
 	config.DB.Delete(&user)
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted Succssfully"})
 }
+func UpdateUser(c *gin.Context) {
+	id := c.Param("id")
+
+	var user models.User
+	result := config.DB.First(&user, id)
+
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User Not Found"})
+		return
+	}
+
+	var updatedUser models.User
+	if err := c.ShouldBindJSON(&updatedUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Data Not Valid"})
+		return
+	}
+
+	user.Name = updatedUser.Name
+	user.Status = updatedUser.Status
+	config.DB.Save(&user)
+
+	c.JSON(http.StatusOK, gin.H{"message": "UpdatedSuccessfully", "user": user})
+}
